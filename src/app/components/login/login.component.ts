@@ -1,7 +1,9 @@
-import { Component, OnInit , Input,Output, EventEmitter} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SocketService } from 'src/app/services/socket.service';
-import { ActivatedRoute,Route } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
 import * as $ from 'jquery';
+
+
 
 @Component({
   selector: 'app-login',
@@ -9,19 +11,28 @@ import * as $ from 'jquery';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent  implements OnInit{
+
+  closeResult = '';
+
   userName:string='';
   userAvatar:string='';
+  formModal:any;
 
   eventRegister="register";
   eventUserExists="userExists";
-  
-  constructor(private routerActived:ActivatedRoute,private socket:SocketService){
+  eventActiveSession="";
+  constructor(private routerActived:ActivatedRoute,
+              private socket:SocketService, 
+              private routerAc:Router
+            ){
 
 }
   ngOnInit():void{
     this.socket.listen(this.eventUserExists).subscribe((data)=>{
         this.ValidarUser(data);
     });
+
+   
   }
 
   EnviarUser(userNickName:string):void
@@ -55,11 +66,18 @@ export class LoginComponent  implements OnInit{
   {
     if(data)
     {
-      alert("Existe");
+      alert (data);
+      //this.open();
+   
     }
     else
     {
-      alert("no existe");
+      alert (data);
+     // this.socket.emit(this.eventRegister,this.userName);
+      this.routerAc.navigate(['chat/',this.userName, this.userAvatar]);
+      
     }
   }
+ 
+  
 }

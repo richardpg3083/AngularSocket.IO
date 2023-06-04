@@ -1,1 +1,49 @@
-<p>login works!</p>
+<section class="bg-gray-50" id="formLogin">
+    <div class="container mt-4">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card ">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-8 offset-md-4">
+                  <img src="https://media.licdn.com/dms/image/C4E0BAQG3b9dPQ5oaTw/company-logo_200_200/0/1612886177953?e=2147483647&v=beta&t=-CT-sdBMWKf5QaFKiHT3JHD_BFUdBQ1HYFVv6IvnHP4" class="card-img-top"  style="width: 50%; height: 150px;" alt="...">
+           
+                </div>
+              </div>
+              <div class="row mt-4">
+                <div class="col-md-12 text-center">
+                  <h5 class="card-title">Chat Web</h5>
+                  <p class="alert alert-info">Elige tu avatar</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-3 text-center">
+                  <img src="../../../assets/img/av1.png" for="av1">
+                  <input type="radio" id="av1" name="avatar"  checked value="../../../assets/img/av1.png">
+                </div>
+                <div class="col-md-3 text-center">
+                  <img src="../../../assets/img/av2.png" for="av2" text-center>
+                  <input type="radio" id="av2" name="avatar" value="../../../assets/img/av2.png">
+                </div>
+                <div class="col-md-3 text-center">
+                  <img src="../../../assets/img/av3.png" for="av3" text-center>
+                  <input type="radio" id="av3" name="avatar" value="../../../assets/img/av3.png">
+                </div>
+                <div class="col-md-3 text-center">
+                  <img src="../../../assets/img/av4.png" for="av4" text-center>
+                  <input type="radio" id="av4" name="avatar"  value="../../../assets/img/av4.png">
+                </div>
+              </div>
+             
+                <div class="form-group">
+                  <label for="userNickName" class="h6 text-dark">Usuario</label>
+                  <input type="text"  class="form-control" #userNickName placeholder="Ingrese su usuario" required=""> <br>
+                </div>
+                <button type="submit" id="registerUser" (click)="EnviarUser(userNickName.value )" class="btn btn-primary btn-block">Ingresar</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

@@ -67,7 +67,7 @@ export class LoginComponent  implements OnInit{
 
   eventRegister="register";
   eventUserExists="userExists";
-  eventActiveSession="";
+  //eventActiveSession="";
   constructor(private routerActived:ActivatedRoute,
               private socket:SocketService, 
               private routerAc:Router,

@@ -10,7 +10,7 @@ import { LoginComponent } from '../components/login/login.component';
 export class SocketService 
 { 
   socket:any;
-  server:string="http://localhost:3000";
+  server:string="http://127.0.0.1:3000";
  
   constructor() 
   { 

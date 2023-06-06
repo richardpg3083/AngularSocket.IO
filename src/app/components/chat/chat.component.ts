@@ -19,13 +19,13 @@ export class ChatComponent implements OnInit {
     dataMess:dataMessage;
      fileURL:any;
      public userMessage:string='';
-     public userFile:any='';
+     
       constructor(
               private rutaActiva: ActivatedRoute,
               private socket:SocketService,
              ){
               this.dataMess=new dataMessage;
-             
+            
              }
  ngOnInit(): void 
  {
@@ -40,7 +40,7 @@ export class ChatComponent implements OnInit {
         this.avatar+=`${avat}`;
     }
 
-    $("#userChat").html(this.nickName+"<br /><p class='text-dark fs-6'>en línea</p>");
+    $("#userChat").html(this.nickName+"<br /><p class='text-light fs-6'>en línea</p>");
     $("#UserNick").val(this.nickName);
     $("#imgUserchat").attr("src", "../../../assets/img/"+this.avatar+".png");
    
@@ -130,5 +130,58 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
     let printMessages:any=$("#messages");
     printMessages.scrollTop = printMessages.scrollHeight;
   }
+KeyPress()
+{
+
+  if (this.fileURL != undefined) {
+      
+    if (this.userMessage.startsWith("-private:")) {
+      const selectUser = this.userMessage.split(" ")[1];
+      const message = this.userMessage.substr(selectUser.length + 10);
+      this.socket.emit("sendMessagesPrivate", {
+        message,
+        image: this.fileURL,
+        selectUser,
+      });
+    } else {
+      this.socket.emit("sendMessage", {
+        message: this.userMessage.trim(),
+        image: this.fileURL,
+      });
+    }
+  } else {
+    console.log("entro por else");
+    console.log(this.userMessage);
+    if (this.userMessage.trim() != "") {
+      if (this.userMessage.startsWith("-private:")) {
+        const selectUser = this.userMessage.split(" ")[1];
+        const message = this.userMessage.substr(selectUser.length + 10);
+        this.socket.emit("sendMessagesPrivate", {
+          message,
+          image: this.fileURL,
+          selectUser,
+        });
+      } else {
+        console.log("entro por else de mensaje privado");
+        this.socket.emit("sendMessage", {
+          message: this.userMessage.trim(),
+          image: this.fileURL,
+        });
+      }
+    }
+  }
+
+  this.userMessage = "";
+  this.fileURL = undefined;
+  let printMessages:any=$("#messages");
+  printMessages.scrollTop = printMessages.scrollHeight;
+
+}
+
+btnSenFile()
+{
+  $("#userFile").click();
+  
+}
 
 }

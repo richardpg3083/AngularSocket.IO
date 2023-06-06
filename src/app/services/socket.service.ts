@@ -1,6 +1,6 @@
 import { Injectable, Input, Output,EventEmitter } from '@angular/core';
 import {io} from 'socket.io-client';
-import { dataMessage } from '../models/user.model';
+import { dataMessage, dataMessageImage } from '../models/user.model';
 import {Observable, Subscriber} from 'rxjs'
 import { LoginComponent } from '../components/login/login.component';
 
@@ -34,6 +34,11 @@ export class SocketService
     })
   }
   emit(eventName:string, data:any)
+  {
+    this.socket.emit(eventName,data);
+  }
+
+  emit1(eventName:string, data:dataMessageImage)
   {
     this.socket.emit(eventName,data);
   }

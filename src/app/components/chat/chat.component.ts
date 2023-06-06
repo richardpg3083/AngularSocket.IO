@@ -4,7 +4,7 @@ import {param } from 'jquery';
 import * as $ from 'jquery';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/services/socket.service';
-import { dataMessage } from 'src/app/models/user.model';
+import { dataMessage, dataMessageImage } from 'src/app/models/user.model';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -17,6 +17,7 @@ export class ChatComponent implements OnInit {
     eventActiveSession="activeSessions";
     eventSendMessage="sendMessage";
     dataMess:dataMessage;
+    dataMessImg:dataMessageImage;
      fileURL:any;
      public userMessage:string='';
      
@@ -25,7 +26,7 @@ export class ChatComponent implements OnInit {
               private socket:SocketService,
              ){
               this.dataMess=new dataMessage;
-            
+              this.dataMessImg=new dataMessageImage;
              }
  ngOnInit(): void 
  {
@@ -86,22 +87,20 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
 
   SendMessage()
   {
-    
-       if (this.fileURL != undefined) {
-      
+    alert(this.fileURL);
+       if (this.fileURL != "") {
+      console.log("entro por si fileUrl ")
       if (this.userMessage.startsWith("-private:")) {
+        console.log("entro por SI mensaje privado");
         const selectUser = this.userMessage.split(" ")[1];
         const message = this.userMessage.substr(selectUser.length + 10);
-        this.socket.emit("sendMessagesPrivate", {
-          message,
-          image: this.fileURL,
-          selectUser,
-        });
+        this.dataMessImg.message=this.userMessage.trim();
+        this.dataMessImg.image=this.fileURL;
+        this.socket.emit1("sendMessagesPrivate", this.dataMessImg);
       } else {
-        this.socket.emit("sendMessage", {
-          message: this.userMessage.trim(),
-          image: this.fileURL,
-        });
+        this.dataMessImg.message=this.userMessage.trim();
+        this.dataMessImg.image=this.fileURL;
+        this.socket.emit1("sendMessage", this.dataMessImg);
       }
     } else {
       console.log("entro por else");
@@ -110,17 +109,14 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
         if (this.userMessage.startsWith("-private:")) {
           const selectUser = this.userMessage.split(" ")[1];
           const message = this.userMessage.substr(selectUser.length + 10);
-          this.socket.emit("sendMessagesPrivate", {
-            message,
-            image: this.fileURL,
-            selectUser,
-          });
+          this.dataMessImg.message=this.userMessage.trim();
+          this.dataMessImg.image=this.fileURL;
+          this.socket.emit("sendMessagesPrivate", this.dataMessImg);
         } else {
           console.log("entro por else de mensaje privado");
-          this.socket.emit("sendMessage", {
-            message: this.userMessage.trim(),
-            image: this.fileURL,
-          });
+          this.dataMessImg.message=this.userMessage.trim();
+          this.dataMessImg.image=this.fileURL;
+          this.socket.emit("sendMessage",this.dataMessImg);
         }
       }
     }
@@ -138,16 +134,13 @@ KeyPress()
     if (this.userMessage.startsWith("-private:")) {
       const selectUser = this.userMessage.split(" ")[1];
       const message = this.userMessage.substr(selectUser.length + 10);
-      this.socket.emit("sendMessagesPrivate", {
-        message,
-        image: this.fileURL,
-        selectUser,
-      });
+      this.dataMessImg.message=this.userMessage.trim();
+      this.dataMessImg.image=this.fileURL;
+      this.socket.emit1("sendMessagesPrivate", this.dataMessImg);
     } else {
-      this.socket.emit("sendMessage", {
-        message: this.userMessage.trim(),
-        image: this.fileURL,
-      });
+      this.dataMessImg.message=this.userMessage.trim();
+          this.dataMessImg.image=this.fileURL;
+          this.socket.emit("sendMessage",this.dataMessImg);
     }
   } else {
     console.log("entro por else");
@@ -156,17 +149,14 @@ KeyPress()
       if (this.userMessage.startsWith("-private:")) {
         const selectUser = this.userMessage.split(" ")[1];
         const message = this.userMessage.substr(selectUser.length + 10);
-        this.socket.emit("sendMessagesPrivate", {
-          message,
-          image: this.fileURL,
-          selectUser,
-        });
+        this.dataMessImg.message=this.userMessage.trim();
+        this.dataMessImg.image=this.fileURL;
+        this.socket.emit1("sendMessagesPrivate", this.dataMessImg);
       } else {
         console.log("entro por else de mensaje privado");
-        this.socket.emit("sendMessage", {
-          message: this.userMessage.trim(),
-          image: this.fileURL,
-        });
+        this.dataMessImg.message=this.userMessage.trim();
+          this.dataMessImg.image=this.fileURL;
+          this.socket.emit("sendMessage",this.dataMessImg);
       }
     }
   }
@@ -178,10 +168,24 @@ KeyPress()
 
 }
 
-btnSenFile()
+btnSendFile(element:any)
 {
-  $("#userFile").click();
+  element.click();
   
+}
+FileChange(event:any)
+{
+  const file:File = event.target.files[0];
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    this.fileURL = reader.result ;
+    
+  };
+  reader.readAsDataURL(file);
+ 
+  this.fileURL
+    ? alert("Error al adjuntar, seleccione nuevamente.")
+    : alert("Foto adjunta, lista para enviar.");
 }
 
 }

@@ -4,7 +4,7 @@ import {param } from 'jquery';
 import * as $ from 'jquery';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from 'src/app/services/socket.service';
-import { dataMessage, dataMessageImage } from 'src/app/models/user.model';
+import { dataMessage, dataMessageImage,dataMessagePriv,dataMessageImagePrivate } from 'src/app/models/user.model';
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -16,8 +16,10 @@ export class ChatComponent implements OnInit {
     public users:any;
     eventActiveSession="activeSessions";
     eventSendMessage="sendMessage";
-    dataMess:dataMessage;
+ 
     dataMessImg:dataMessageImage;
+   
+     dataMessImgPriv:dataMessageImagePrivate;
      fileURL:any;
      public userMessage:string='';
      
@@ -25,11 +27,14 @@ export class ChatComponent implements OnInit {
               private rutaActiva: ActivatedRoute,
               private socket:SocketService,
              ){
-              this.dataMess=new dataMessage;
+              
               this.dataMessImg=new dataMessageImage;
+              this.dataMessImgPriv=new dataMessageImagePrivate;
+             
              }
  ngOnInit(): void 
- {
+ {  
+  
     const user=this.rutaActiva.snapshot.paramMap.get('user');
     if(user)
     {
@@ -54,15 +59,15 @@ export class ChatComponent implements OnInit {
   });
 
 this.socket.listen1(this.eventSendMessage).subscribe(data=>{
-  this.dataMess  = data as dataMessage;
+  this.dataMessImg  = data as dataMessage;
   let printMessages:any=$("#messages");
-  if(this.dataMess.user==$('#UserNick').val())
+  if(this.dataMessImg.user==$('#UserNick').val())
   {
-    $("#messages").append(`<div class="message my_message "><p>${this.dataMess.message}<br /><span>${this.dataMess.user}</span></p></div>`);
-    if(this.dataMess.image!==undefined )
+    $("#messages").append(`<div class="message my_message "><p>${this.dataMessImg.message}<br /><span>${this.dataMessImg.user}</span></p></div>`);
+    if(this.dataMessImg.image!==undefined )
     {
       const imagen = document.createElement("img");
-      imagen.src = this.dataMess.image;
+      imagen.src = this.dataMessImg.image;
       $("#messages").append(imagen);
     }
     
@@ -70,11 +75,11 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
   }
   else
   {
-    $("#messages").append(`<div class="message frnd_message "><p>${this.dataMess.message}<br /><span>${this.dataMess.user}</span></p></div>`);
-    if(this.dataMess.image!==undefined )
+    $("#messages").append(`<div class="message frnd_message "><p>${this.dataMessImg.message}<br /><span>${this.dataMessImg.user}</span></p></div>`);
+    if(this.dataMessImg.image!==undefined )
     {
       const imagen = document.createElement("img");
-      imagen.src = this.dataMess.image;
+      imagen.src = this.dataMessImg.image;
       $("#messages").append(imagen);
     }
     
@@ -94,12 +99,15 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
         
         const selectUser = this.userMessage.split(" ")[1];
         const message = this.userMessage.substr(selectUser.length + 10);
-        this.dataMessImg.message=this.userMessage.trim();
-        this.dataMessImg.image=this.fileURL;
-        this.socket.emit1("sendMessagesPrivate", this.dataMessImg);
+        this.dataMessImgPriv.message=this.userMessage.trim();
+        this.dataMessImgPriv.image=this.fileURL;
+        this.dataMessImgPriv.userPriv=selectUser;
+        this.dataMessImgPriv.user=this.nickName;
+        this.socket.emit1("sendMessagesPrivate", this.dataMessImgPriv);
       } else {
         this.dataMessImg.message=this.userMessage.trim();
         this.dataMessImg.image=this.fileURL;
+        this.dataMessImg.user=this.nickName;
         this.socket.emit1("sendMessage", this.dataMessImg);
       }
     } else {
@@ -108,13 +116,16 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
         if (this.userMessage.startsWith("-private:")) {
           const selectUser = this.userMessage.split(" ")[1];
           const message = this.userMessage.substr(selectUser.length + 10);
-          this.dataMessImg.message=this.userMessage.trim();
-          this.dataMessImg.image=this.fileURL;
-          this.socket.emit("sendMessagesPrivate", this.dataMessImg);
+          this.dataMessImgPriv.message=this.userMessage.trim();
+          this.dataMessImgPriv.image=this.fileURL;
+          this.dataMessImgPriv.userPriv=selectUser;
+          this.dataMessImgPriv.user=this.nickName;
+          this.socket.emit("sendMessagesPrivate", this.dataMessImgPriv);
         } else {
           
           this.dataMessImg.message=this.userMessage.trim();
           this.dataMessImg.image=this.fileURL;
+          this.dataMessImg.user=this.nickName;
           this.socket.emit("sendMessage",this.dataMessImg);
         }
       }
@@ -126,43 +137,50 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
     printMessages.scrollTop = printMessages.scrollHeight;
   }
 KeyPress()
-{
-
-  if (this.fileURL != undefined) {
-      
+{ 
+  if (this.fileURL != "") {
+     
+  if (this.userMessage.startsWith("-private:")) {
+    
+    const selectUser = this.userMessage.split(" ")[1];
+    const message = this.userMessage.substr(selectUser.length + 10);
+    this.dataMessImgPriv.message=this.userMessage.trim();
+    this.dataMessImgPriv.image=this.fileURL;
+    this.dataMessImgPriv.userPriv=selectUser;
+    this.dataMessImgPriv.user=this.nickName;
+    this.socket.emit1("sendMessagesPrivate", this.dataMessImgPriv);
+  } else {
+    this.dataMessImg.message=this.userMessage.trim();
+    this.dataMessImg.image=this.fileURL;
+    this.dataMessImg.user=this.nickName;
+    this.socket.emit1("sendMessage", this.dataMessImg);
+  }
+} else {
+ 
+  if (this.userMessage.trim() != "") {
     if (this.userMessage.startsWith("-private:")) {
       const selectUser = this.userMessage.split(" ")[1];
       const message = this.userMessage.substr(selectUser.length + 10);
+      this.dataMessImgPriv.message=this.userMessage.trim();
+      this.dataMessImgPriv.image=this.fileURL;
+      this.dataMessImgPriv.userPriv=selectUser;
+      this.dataMessImgPriv.user=this.nickName;
+      this.socket.emit("sendMessagesPrivate", this.dataMessImgPriv);
+    } else {
+      
       this.dataMessImg.message=this.userMessage.trim();
       this.dataMessImg.image=this.fileURL;
-      this.socket.emit1("sendMessagesPrivate", this.dataMessImg);
-    } else {
-      this.dataMessImg.message=this.userMessage.trim();
-          this.dataMessImg.image=this.fileURL;
-          this.socket.emit("sendMessage",this.dataMessImg);
-    }
-  } else {
-   
-    if (this.userMessage.trim() != "") {
-      if (this.userMessage.startsWith("-private:")) {
-        const selectUser = this.userMessage.split(" ")[1];
-        const message = this.userMessage.substr(selectUser.length + 10);
-        this.dataMessImg.message=this.userMessage.trim();
-        this.dataMessImg.image=this.fileURL;
-        this.socket.emit1("sendMessagesPrivate", this.dataMessImg);
-      } else {
-        
-        this.dataMessImg.message=this.userMessage.trim();
-          this.dataMessImg.image=this.fileURL;
-          this.socket.emit("sendMessage",this.dataMessImg);
-      }
+      this.dataMessImg.user=this.nickName;
+      this.socket.emit("sendMessage",this.dataMessImg);
     }
   }
+}
 
-  this.userMessage = "";
-  this.fileURL = undefined;
-  let printMessages:any=$("#messages");
-  printMessages.scrollTop = printMessages.scrollHeight;
+this.userMessage = "";
+this.fileURL = undefined;
+let printMessages:any=$("#messages");
+printMessages.scrollTop = printMessages.scrollHeight;
+ 
 
 }
 

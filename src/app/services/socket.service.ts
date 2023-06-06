@@ -1,6 +1,6 @@
 import { Injectable, Input, Output,EventEmitter } from '@angular/core';
 import {io} from 'socket.io-client';
-import { dataMessage, dataMessageImage } from '../models/user.model';
+import { dataMessage, dataMessageImage, dataMessagePriv, dataMessageImagePrivate } from '../models/user.model';
 import {Observable, Subscriber} from 'rxjs'
 import { LoginComponent } from '../components/login/login.component';
 

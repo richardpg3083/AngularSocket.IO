@@ -93,17 +93,17 @@ export class LoginComponent  implements OnInit{
 
     if ($("#av2").is(':checked')==true)
     {  
-      this.userAvatar=String($("#av1").val());
+      this.userAvatar=String($("#av2").val());
     }
 
     if ($("#av3").is(':checked')==true)
     {    
-      this.userAvatar=String($("#av1").val());
+      this.userAvatar=String($("#av3").val());
     }
 
     if ($("#av4").is(':checked')==true)
     { 
-      this.userAvatar=String($("#av1").val());
+      this.userAvatar=String($("#av4").val());
     }
     
     this.socket.emit(this.eventRegister,this.userName);

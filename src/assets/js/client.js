@@ -38,7 +38,7 @@ socket.on("login", () => {
   formContentChat.style.display = "flex";
   formShowUsers.style.display = "block";
   formChatGrupal.style.display = "block";
-document.querySelector("#userChat").innerHTML=txtUserNickName.value+"<br /><p class='text-dark fs-6'>en línea</p>";
+document.querySelector("#userChat").innerHTML=txtUserNickName.value+"<br /><p class='text-white fs-6'>HOla</p>";
 document.querySelector("#UserNick").value=txtUserNickName.value;
 if (document.getElementById("av1").checked==true)
 {

@@ -87,11 +87,11 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
 
   SendMessage()
   {
-    alert(this.fileURL);
+   
        if (this.fileURL != "") {
-      console.log("entro por si fileUrl ")
+     
       if (this.userMessage.startsWith("-private:")) {
-        console.log("entro por SI mensaje privado");
+        
         const selectUser = this.userMessage.split(" ")[1];
         const message = this.userMessage.substr(selectUser.length + 10);
         this.dataMessImg.message=this.userMessage.trim();
@@ -103,8 +103,7 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
         this.socket.emit1("sendMessage", this.dataMessImg);
       }
     } else {
-      console.log("entro por else");
-      console.log(this.userMessage);
+     
       if (this.userMessage.trim() != "") {
         if (this.userMessage.startsWith("-private:")) {
           const selectUser = this.userMessage.split(" ")[1];
@@ -113,7 +112,7 @@ this.socket.listen1(this.eventSendMessage).subscribe(data=>{
           this.dataMessImg.image=this.fileURL;
           this.socket.emit("sendMessagesPrivate", this.dataMessImg);
         } else {
-          console.log("entro por else de mensaje privado");
+          
           this.dataMessImg.message=this.userMessage.trim();
           this.dataMessImg.image=this.fileURL;
           this.socket.emit("sendMessage",this.dataMessImg);
@@ -143,8 +142,7 @@ KeyPress()
           this.socket.emit("sendMessage",this.dataMessImg);
     }
   } else {
-    console.log("entro por else");
-    console.log(this.userMessage);
+   
     if (this.userMessage.trim() != "") {
       if (this.userMessage.startsWith("-private:")) {
         const selectUser = this.userMessage.split(" ")[1];
@@ -153,7 +151,7 @@ KeyPress()
         this.dataMessImg.image=this.fileURL;
         this.socket.emit1("sendMessagesPrivate", this.dataMessImg);
       } else {
-        console.log("entro por else de mensaje privado");
+        
         this.dataMessImg.message=this.userMessage.trim();
           this.dataMessImg.image=this.fileURL;
           this.socket.emit("sendMessage",this.dataMessImg);
